@@ -1,6 +1,6 @@
 function widget:GetInfo()
     return {
-        name      = "Crawlong bombs (hold fire and self-d radius) v1",
+        name      = "Crawling bombs (hold fire and self-d radius) v1",
         desc      = "Sets crawling bombs on hold fire by default and displays self-d radius",
         author    = "[teh]decay aka [teh]undertaker",
         date      = "29 dec 2013",
