@@ -1,6 +1,6 @@
 function widget:GetInfo()
     return {
-        name      = "Crawling bombs (hold fire and self-d radius) v1",
+        name      = "Crawling bombs (hold fire and self-d radius) v2",
         desc      = "Sets crawling bombs on hold fire by default and displays self-d radius",
         author    = "[teh]decay aka [teh]undertaker",
         date      = "29 dec 2013",
@@ -14,7 +14,11 @@ end
 -- project page on github: https://github.com/jamerlan/unit_crawling_bomb_range
 
 --Changelog
--- v2 (for future)
+-- v2 [teh]decay Advanced Crawling bombs are cloaked by default (you can configure using "cloakAdvCrawlingBombs" variable) + hide circles when GUI is hidden
+
+
+local cloakAdvCrawlingBombs = true
+
 
 local GetUnitPosition     = Spring.GetUnitPosition
 local glColor = gl.Color
@@ -27,8 +31,10 @@ local spGetSpectatingState = Spring.GetSpectatingState
 local spGetMyPlayerID		= Spring.GetMyPlayerID
 local spGetPlayerInfo		= Spring.GetPlayerInfo
 local spGiveOrderToUnit = Spring.GiveOrderToUnit
+local spIsGUIHidden = Spring.IsGUIHidden
 
 local cmdFireState = CMD.FIRE_STATE
+local cmdCloack = CMD.CLOAK
 
 local blastCircleDivs = 100
 local weapNamTab		  = WeaponDefNames
@@ -52,8 +58,12 @@ local crawlingBombs = {}
 local spectatorMode = false
 local notInSpecfullmode = false
 
-function setBombOnHoldFire(unitID)
+function setBombStates(unitID, unitDefID)
     spGiveOrderToUnit(unitID, cmdFireState, { 0 }, {  })
+
+    if unitDefID == coreAdvCrawlingId and cloakAdvCrawlingBombs then
+        spGiveOrderToUnit(unitID, cmdCloack, { 1 }, {})
+    end
 end
 
 function isBomb(unitDefID)
@@ -66,7 +76,7 @@ end
 function widget:UnitFinished(unitID, unitDefID, unitTeam)
     if isBomb(unitDefID) then
         crawlingBombs[unitID] = true
-        setBombOnHoldFire(unitID)
+        setBombStates(unitID, unitDefID)
     end
 end
 
@@ -88,14 +98,14 @@ end
 function widget:UnitCreated(unitID, unitDefID, teamID, builderID)
     if isBomb(unitDefID) then
         crawlingBombs[unitID] = true
-        setBombOnHoldFire(unitID)
+        setBombStates(unitID, unitDefID)
     end
 end
 
 function widget:UnitTaken(unitID, unitDefID, unitTeam, newTeam)
     if isBomb(unitDefID) then
         crawlingBombs[unitID] = true
-        setBombOnHoldFire(unitID)
+        setBombStates(unitID, unitDefID)
     end
 end
 
@@ -103,7 +113,7 @@ end
 function widget:UnitGiven(unitID, unitDefID, unitTeam, oldTeam)
     if isBomb(unitDefID) then
         crawlingBombs[unitID] = true
-        setBombOnHoldFire(unitID)
+        setBombStates(unitID, unitDefID)
     end
 end
 
@@ -126,6 +136,8 @@ function widget:DrawWorldPreUnit()
         end
         notInSpecfullmode = false
     end
+
+    if spIsGUIHidden() then return end
 
     glDepthTest(true)
 
