@@ -1,6 +1,6 @@
 function widget:GetInfo()
     return {
-        name      = "Crawling bombs (hold fire and self-d radius) v2",
+        name      = "Crawling bombs (hold fire and self-d radius) v3",
         desc      = "Sets crawling bombs on hold fire by default and displays self-d radius",
         author    = "[teh]decay aka [teh]undertaker",
         date      = "29 dec 2013",
@@ -14,7 +14,8 @@ end
 -- project page on github: https://github.com/jamerlan/unit_crawling_bomb_range
 
 --Changelog
--- v2 [teh]decay Advanced Crawling bombs are cloaked by default (you can configure using "cloakAdvCrawlingBombs" variable) + hide circles when GUI is hidden
+-- v2 [teh]decay Advanced Crawling Bombs are cloaked by default (you can configure using "cloakAdvCrawlingBombs" variable) + hide circles when GUI is hidden
+-- v3 [teh]decay Draw decloak range for Advanced Crawling Bomb
 
 
 local cloakAdvCrawlingBombs = true
@@ -149,6 +150,11 @@ function widget:DrawWorldPreUnit()
 
             local selfdBlastId = weapNamTab[lower(udef[selfdTag])].id
             local selfdBlastRadius = weapTab[selfdBlastId][aoeTag]
+
+            if udefId == coreAdvCrawlingId then
+                glColor(1, .6, .3, .8)
+                glDrawGroundCircle(x, y, z, udef["decloakDistance"], blastCircleDivs)
+            end
 
             glColor(1, 0, 0, .7)
             glDrawGroundCircle(x, y, z, selfdBlastRadius, blastCircleDivs)
