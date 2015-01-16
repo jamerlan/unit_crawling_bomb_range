@@ -1,12 +1,12 @@
 function widget:GetInfo()
     return {
-        name      = "Crawling bombs (hold fire and self-d radius) v3",
+        name      = "Crawling bombs (hold fire and self-d radius) v4",
         desc      = "Sets crawling bombs on hold fire by default and displays self-d radius",
         author    = "[teh]decay aka [teh]undertaker",
         date      = "29 dec 2013",
         license   = "The BSD License",
         layer     = 0,
-        version   = 1,
+        version   = 4,
         enabled   = true  -- loaded by default
     }
 end
@@ -16,6 +16,7 @@ end
 --Changelog
 -- v2 [teh]decay Advanced Crawling Bombs are cloaked by default (you can configure using "cloakAdvCrawlingBombs" variable) + hide circles when GUI is hidden
 -- v3 [teh]decay Draw decloak range for Advanced Crawling Bomb
+-- v4 [teh]decay Draw blow radius for adv geos too
 
 
 local cloakAdvCrawlingBombs = true
@@ -37,10 +38,10 @@ local spIsGUIHidden = Spring.IsGUIHidden
 local cmdFireState = CMD.FIRE_STATE
 local cmdCloack = CMD.CLOAK
 
-local blastCircleDivs = 100
-local weapNamTab		  = WeaponDefNames
-local weapTab		      = WeaponDefs
-local udefTab				= UnitDefs
+local blastCircleDivs   = 100
+local weapNamTab		= WeaponDefNames
+local weapTab		    = WeaponDefs
+local udefTab			= UnitDefs
 
 local selfdTag = "selfDExplosion"
 local aoeTag = "damageAreaOfEffect"
@@ -48,11 +49,14 @@ local aoeTag = "damageAreaOfEffect"
 local coreCrawling = UnitDefNames["corroach"]
 local coreAdvCrawling = UnitDefNames["corsktl"]
 local armCrawling = UnitDefNames["armvader"]
-
+local armAdvGEO = UnitDefNames["amgeo"]
+local coreAdvGEO = UnitDefNames["cmgeo"]
 
 local coreCrawlingId = coreCrawling.id
 local coreAdvCrawlingId = coreAdvCrawling.id
 local armCrawlingId = armCrawling.id
+local armAdvGEOId = armAdvGEO.id
+local coreAdvGEOId = coreAdvGEO.id
 
 local crawlingBombs = {}
 
@@ -68,7 +72,7 @@ function setBombStates(unitID, unitDefID)
 end
 
 function isBomb(unitDefID)
-    if unitDefID == coreCrawlingId or coreAdvCrawlingId == unitDefID or unitDefID == armCrawlingId then
+    if unitDefID == coreAdvGEOId or unitDefID == armAdvGEOId or unitDefID == coreCrawlingId or coreAdvCrawlingId == unitDefID or unitDefID == armCrawlingId then
         return true
     end
     return false
